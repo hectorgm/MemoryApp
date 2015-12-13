@@ -5,34 +5,33 @@ package com.example.hector.memory;
  */
 public class Card {
 
-    private int colour;
-    private boolean matched;
-    private boolean shown;
+    private int mColour;
+    private boolean mMatched;
+    private boolean mShown;
 
-    public Card(int colour)
-    {
-        this.colour = colour;
-        this.matched = false;
-        this.shown = false;
+    public Card(int colour) {
+        this.mColour = colour;
+        this.mMatched = false;
+        this.mShown = false;
     }
 
     public int getColour() {
-        return colour;
+        return mColour;
     }
 
     public boolean isMatched() {
-        return matched;
+        return mMatched;
     }
 
     public void setMatched(boolean matched) {
-        this.matched = matched;
+        this.mMatched = matched;
     }
 
     public boolean isShown() {
-        return shown;
+        return mShown;
     }
 
     public void setShown(boolean shown) {
-        this.shown = shown;
+        this.mShown = shown;
     }
 }
