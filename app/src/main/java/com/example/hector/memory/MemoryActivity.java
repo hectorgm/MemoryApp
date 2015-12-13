@@ -10,6 +10,8 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,8 +37,11 @@ public class MemoryActivity extends Activity {
     // Map of the card index and the colour assigne
     private HashMap<Integer, Card> mButtonCardMap = new HashMap<Integer, Card>();
 
-    Card mFirstCardClicked = null;
-    Card mSecondCardClicked = null;
+    private int[] mImageButtons = new int[NUM_CARDS];
+    private int[] mCardColours = new int[NUM_CARDS / 2];
+
+    private Card mFirstCardClicked = null;
+    private Card mSecondCardClicked = null;
 
     private static final boolean PLAYER1_TURN = false;
     private static final boolean PLAYER2_TURN = true;
@@ -50,7 +55,11 @@ public class MemoryActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_memory);
 
+        populateCardColoursVector();
+        populateImageButtonsVector();
         populateButtons();
+
+        animateScore(mTurn);
 
         findViewById(R.id.imageView).bringToFront();
 
@@ -123,74 +132,66 @@ public class MemoryActivity extends Activity {
         zoomImageFromThumb(view, card.getColour());
     }
 
-    private int[] getCardColoursVector() {
-        int[] cardColours = new int[NUM_CARDS / 2];
-        cardColours[0] = R.drawable.number1;
-        cardColours[1] = R.drawable.number2;
-        cardColours[2] = R.drawable.number3;
-        cardColours[3] = R.drawable.number4;
-        cardColours[4] = R.drawable.number5;
-        cardColours[5] = R.drawable.number6;
-        cardColours[6] = R.drawable.number7;
-        cardColours[7] = R.drawable.number8;
-        cardColours[8] = R.drawable.number9;
-        cardColours[9] = R.drawable.number10;
-
-        return cardColours;
+    private void populateCardColoursVector() {
+        mCardColours[0] = R.drawable.number1;
+        mCardColours[1] = R.drawable.number2;
+        mCardColours[2] = R.drawable.number3;
+        mCardColours[3] = R.drawable.number4;
+        mCardColours[4] = R.drawable.number5;
+        mCardColours[5] = R.drawable.number6;
+        mCardColours[6] = R.drawable.number7;
+        mCardColours[7] = R.drawable.number8;
+        mCardColours[8] = R.drawable.number9;
+        mCardColours[9] = R.drawable.number10;
     }
 
-    private int[] getImageButtonsVector() {
-        int[] imageButtons = new int[NUM_CARDS];
-        imageButtons[0] = R.id.imageButton;
-        imageButtons[1] = R.id.imageButton2;
-        imageButtons[2] = R.id.imageButton3;
-        imageButtons[3] = R.id.imageButton4;
-        imageButtons[4] = R.id.imageButton5;
-        imageButtons[5] = R.id.imageButton6;
-        imageButtons[6] = R.id.imageButton7;
-        imageButtons[7] = R.id.imageButton8;
-        imageButtons[8] = R.id.imageButton9;
-        imageButtons[9] = R.id.imageButton10;
-        imageButtons[10] = R.id.imageButton11;
-        imageButtons[11] = R.id.imageButton12;
-        imageButtons[12] = R.id.imageButton13;
-        imageButtons[13] = R.id.imageButton14;
-        imageButtons[14] = R.id.imageButton15;
-        imageButtons[15] = R.id.imageButton16;
-        imageButtons[16] = R.id.imageButton17;
-        imageButtons[17] = R.id.imageButton18;
-        imageButtons[18] = R.id.imageButton19;
-        imageButtons[19] = R.id.imageButton20;
-
-        return imageButtons;
+    private void populateImageButtonsVector() {
+        mImageButtons[0] = R.id.imageButton;
+        mImageButtons[1] = R.id.imageButton2;
+        mImageButtons[2] = R.id.imageButton3;
+        mImageButtons[3] = R.id.imageButton4;
+        mImageButtons[4] = R.id.imageButton5;
+        mImageButtons[5] = R.id.imageButton6;
+        mImageButtons[6] = R.id.imageButton7;
+        mImageButtons[7] = R.id.imageButton8;
+        mImageButtons[8] = R.id.imageButton9;
+        mImageButtons[9] = R.id.imageButton10;
+        mImageButtons[10] = R.id.imageButton11;
+        mImageButtons[11] = R.id.imageButton12;
+        mImageButtons[12] = R.id.imageButton13;
+        mImageButtons[13] = R.id.imageButton14;
+        mImageButtons[14] = R.id.imageButton15;
+        mImageButtons[15] = R.id.imageButton16;
+        mImageButtons[16] = R.id.imageButton17;
+        mImageButtons[17] = R.id.imageButton18;
+        mImageButtons[18] = R.id.imageButton19;
+        mImageButtons[19] = R.id.imageButton20;
     }
 
     private void populateButtons() {
         // Map of colours and the number of times that colour has been assigned to a card
         HashMap<Integer, Integer> coloursMap = new HashMap<Integer, Integer>();
-        Card[] cards = new Card[NUM_CARDS];
-        int[] cardColours = getCardColoursVector();
-        int[] imageButtons = getImageButtonsVector();
+        Card[] cards = new Card[NUM_CARDS];      
 
-        for (int i = 0; i < cardColours.length; ++i) {
-            coloursMap.put(cardColours[i], 0);
+        for (int i = 0; i < mCardColours.length; ++i) {
+            coloursMap.put(mCardColours[i], 0);
         }
 
         Random random = new Random();
         for (int cardIndex = 0; cardIndex < NUM_CARDS; ++cardIndex) {
-            int colourIndex = random.nextInt(cardColours.length);
-            int colour = cardColours[colourIndex];
+            int colourIndex = random.nextInt(mCardColours.length);
+            int colour = mCardColours[colourIndex];
             while (coloursMap.get(colour) > 1) {
-                colourIndex = random.nextInt(cardColours.length);
-                colour = cardColours[colourIndex];
+                colourIndex = random.nextInt(mCardColours.length);
+                colour = mCardColours[colourIndex];
             }
 
             Card card = new Card(colour);
             cards[cardIndex] = card;
             // Increase the counter that shows the number of times the colour has been used
             coloursMap.put(colour, coloursMap.get(colour) + 1);
-            mButtonCardMap.put(imageButtons[cardIndex], cards[cardIndex]);
-            setImageToButton(imageButtons[cardIndex], R.drawable.back);
+            mButtonCardMap.put(mImageButtons[cardIndex], cards[cardIndex]);
+            setImageToButton(mImageButtons[cardIndex], R.drawable.back);
         }
     }
 
@@ -205,6 +206,26 @@ public class MemoryActivity extends Activity {
 
     private void changeTurn() {
         mTurn = !mTurn;
+        animateScore(mTurn);
+    }
+
+    private void animateScore(boolean playerID) {
+        TextView scoreText1 = (TextView) findViewById(R.id.score1);
+        TextView scoreText2 = (TextView) findViewById(R.id.score2);
+
+        scoreText1.clearAnimation();
+        scoreText2.clearAnimation();
+
+        Animation anim = new AlphaAnimation(1.0f, 0.5f);
+        anim.setDuration(1000);
+        anim.setStartOffset(500);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+
+        if (mTurn == PLAYER1_TURN)
+            scoreText1.startAnimation(anim);
+        else
+            scoreText2.startAnimation(anim);
     }
 
     private void playerScores() {
@@ -228,9 +249,24 @@ public class MemoryActivity extends Activity {
     private void restartGame() {
         mScore.restartScore();
         mTurn = PLAYER1_TURN;
+        mFirstCardClicked = null;
+        mSecondCardClicked = null;
+
+        setClickableAllImageButton(true);
 
         mButtonCardMap.clear();
         populateButtons();
+    }
+    
+    private void setClickableAllImageButton(boolean clickable) {
+        for (int imageButtonID : mImageButtons) {
+            ImageButton imageButton = (ImageButton)findViewById(imageButtonID);
+            imageButton.setClickable(clickable);
+        }
+    }
+
+    public void resetButtonOnClick(View view) {
+        restartGame();
     }
 
     public static Object getKeyFromValue(Map hm, Object value) {
@@ -379,4 +415,6 @@ public class MemoryActivity extends Activity {
             }
         });
     }
+
+
 }

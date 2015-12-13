@@ -222,28 +222,17 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="0"
                     android:id="@+id/score1"
-                    android:layout_gravity="left|bottom" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.7"
-                android:layout_gravity="bottom|center">
-
-                <SeekBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/seekBar"
-                    android:progress="50"
-                    android:layout_gravity="bottom" />
+                    android:layout_gravity="left|bottom"
+                    android:textSize="50dp"
+                    android:textIsSelectable="false"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.15"
-                android:layout_gravity="bottom|right">
+                android:layout_gravity="bottom|center">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -251,7 +240,27 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="0"
                     android:id="@+id/score2"
-                    android:layout_gravity="bottom|right" />
+                    android:layout_gravity="bottom|right"
+                    android:textStyle="bold"
+                    android:textSize="50dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_weight="0.01">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reset"
+                    android:id="@+id/resetButton"
+                    android:onClick="resetButtonOnClick"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
